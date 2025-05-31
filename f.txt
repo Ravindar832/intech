@@ -1,0 +1,15 @@
+rainwater can be trapped between elevated surfaces using two approaches — one with a discrete array of heights and 
+another with a continuous mathematical function.
+
+In the discrete version, the heights are given as a list (like [2, 1, 3, 0, 1, 2, 3]), representing elevation bars.
+The function uses two pointers (one from the left and one from the right) to move inward. At each step, 
+it keeps track of the maximum height seen so far from each side. If the current height is lower than the maximum on that side,
+ the difference is added to the total trapped water. This efficiently computes the trapped water without using extra space.
+
+In the function-based version, the terrain is described by a continuous function, like sin(x).
+The function samples many points between two values (for example, from 0 to 2π), then estimates how much water could be trapped between the curves.
+It does this by comparing the maximum height to the left and right of each sampled point and
+summing the water held above the current function value. This gives an approximation of the water volume.
+
+The code tests both methods. The discrete version shows 5 units of trapped water for the given height array,
+ and the function-based version shows about 1.36 units of water trapped between the peaks and valleys of the sine function.
