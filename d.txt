@@ -1,0 +1,57 @@
+// Fast Inverse Square Root algorithm
+
+ float InvSqrt(float x) {
+    float xhalf = 0.5f * x;
+    int i = *(int*)&x;             // evil bit level hacking
+    i = 0x5f3759df - (i >> 1);     // what the fuck?
+    x = *(float*)&i;
+    x = x * (1.5f - xhalf * x * x);
+    return x;
+}
+ 
+explanation  
+
+Fast Inverse Square Root Explanation
+------------------------------------
+
+Step 1: Reinterpret Float as Integer
+------------------------------------
+int i = *(int*)&x;
+
+- Access the raw bits of the 32-bit float 'x' by treating it as an integer.
+- IEEE 754 float format: 1 bit sign | 8 bits exponent | 23 bits mantissa.
+- This lets us manipulate the bit-level representation directly.
+
+Step 2: Magic Number Hack
+-------------------------
+i = 0x5f3759df - (i >> 1);
+
+- Right-shift 'i' by 1 (halves the exponent in log space, approximating sqrt).
+- Subtract from the magic constant 0x5f3759df, which was found empirically.
+- This gives a surprisingly good initial approximation of 1/sqrt(x).
+
+Step 3: Convert Back to Float
+-----------------------------
+x = *(float*)&i;
+
+- Reinterpret the modified integer bits back as a float.
+- This float 'x' now holds the initial approximation of 1/sqrt(original x).
+
+Step 4: Newton-Raphson Refinement
+---------------------------------
+x = x * (1.5f - xhalf * x * x);
+
+- Refine the approximation using one Newton-Raphson iteration.
+- Newton-Raphson is used to solve y = 1/sqrt(x) by iterating:
+
+    y_{n+1} = y_n * (1.5 - 0.5 * x * y_n^2)
+
+- This step significantly improves accuracy (approx. 4-5 digits correct).
+
+------------------------------------
+Summary:
+- The trick uses bit-level hacks plus a single iteration of Newton-Raphson.
+- It is fast and efficient, historically used in graphics engines like Quake III.
+
+
+ 
